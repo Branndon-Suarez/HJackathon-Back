@@ -86,4 +86,3 @@ production:
   # En producción, Supabase suele dar una URL completa llamada DATABASE_URL
   # Si no, usamos las variables individuales
   url: <%= ENV["DATABASE_URL"] %>
-  database: <%= ENV["DB_NAME"] %>
