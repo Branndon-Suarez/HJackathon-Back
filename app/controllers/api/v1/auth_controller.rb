@@ -12,7 +12,7 @@ module Api
 
         render json: {
           token: token,
-          lead: LeadSerializer.render(lead)
+          lead: LeadSerializer.render_as_hash(lead)
         }
       end
     end

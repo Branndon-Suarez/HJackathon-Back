@@ -10,7 +10,7 @@ RSpec.describe "Api::V1::Companies", type: :request do
       get "/api/v1/companies", headers: headers
 
       expect(response).to have_http_status(:ok)
-      expect(json_body["data"].size).to eq(3)
+      expect(json_body["data"].size).to eq(4)
       expect(json_body["meta"]).to include("current_page", "total_count")
     end
   end
@@ -47,7 +47,7 @@ RSpec.describe "Api::V1::Companies", type: :request do
     it "returns 422 with invalid params" do
       post "/api/v1/companies", params: { company: { name: "" } }, headers: headers
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 

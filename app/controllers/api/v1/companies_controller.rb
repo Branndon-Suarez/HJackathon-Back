@@ -6,23 +6,23 @@ module Api
       def index
         companies = Company.ordered.page(params[:page]).per(params[:per] || 10)
         render json: {
-          data: CompanySerializer.render(companies, view: :extended),
+          data: CompanySerializer.render_as_hash(companies, view: :extended),
           meta: pagination_meta(companies)
         }
       end
 
       def show
-        render json: { data: CompanySerializer.render(@company, view: :extended) }
+        render json: { data: CompanySerializer.render_as_hash(@company, view: :extended) }
       end
 
       def create
         company = Company.create!(company_params)
-        render json: { data: CompanySerializer.render(company) }, status: :created
+        render json: { data: CompanySerializer.render_as_hash(company) }, status: :created
       end
 
       def update
         @company.update!(company_params)
-        render json: { data: CompanySerializer.render(@company) }
+        render json: { data: CompanySerializer.render_as_hash(@company) }
       end
 
       private

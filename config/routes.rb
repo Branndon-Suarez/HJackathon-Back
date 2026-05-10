@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
+
   namespace :api do
     namespace :v1 do
       get "ping", to: "ping#show"
@@ -21,6 +24,7 @@ Rails.application.routes.draw do
 
       resources :diagnostics, only: %i[show update] do
         resource :strategy_plan, only: %i[show create update]
+        post :ribuzz_diagnostic, on: :member
       end
 
       resources :strategy_plans, only: %i[update] do

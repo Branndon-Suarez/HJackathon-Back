@@ -1,0 +1,1 @@
+class DuplicatePlanError < StandardError; end

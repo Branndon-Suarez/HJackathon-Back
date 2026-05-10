@@ -3,7 +3,8 @@ class Lead < ApplicationRecord
   has_many :diagnostics, dependent: :destroy
 
   validates :full_name, presence: true
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true,
+                    format: { with: URI::MailTo::EMAIL_REGEXP }
 
   scope :ordered, -> { order(created_at: :desc) }
 end

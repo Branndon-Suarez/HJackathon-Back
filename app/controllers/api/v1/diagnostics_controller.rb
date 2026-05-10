@@ -9,35 +9,40 @@ module Api
             status: 422,
             details: [ { field: :status, message: "cannot transition from completed to pending" } ]
           }
-        }, status: :unprocessable_entity
+        }, status: :unprocessable_content
       end
 
       before_action :set_lead, only: %i[index create]
-      before_action :set_diagnostic, only: %i[show update]
+      before_action :set_diagnostic, only: %i[show update ribuzz_diagnostic]
 
       def index
         diagnostics = @lead.diagnostics.ordered.page(params[:page]).per(params[:per] || 10)
         render json: {
-          data: DiagnosticSerializer.render(diagnostics, view: :extended),
+          data: DiagnosticSerializer.render_as_hash(diagnostics, view: :extended),
           meta: pagination_meta(diagnostics)
         }
       end
 
       def show
-        render json: { data: DiagnosticSerializer.render(@diagnostic, view: :extended) }
+        render json: { data: DiagnosticSerializer.render_as_hash(@diagnostic, view: :extended) }
       end
 
       def create
         diagnostic = @lead.diagnostics.create!(diagnostic_params)
         Diagnostics::ProcessService.new(diagnostic).call if diagnostic.completed?
-        render json: { data: DiagnosticSerializer.render(diagnostic) }, status: :created
+        render json: { data: DiagnosticSerializer.render_as_hash(diagnostic) }, status: :created
+      end
+
+      def ribuzz_diagnostic
+        RiBuzz::DiagnosticService.new(@diagnostic).call
+        render json: { data: DiagnosticSerializer.render_as_hash(@diagnostic, view: :extended) }
       end
 
       def update
         validate_status_transition if params[:diagnostic][:status].present?
         @diagnostic.update!(diagnostic_params)
         Diagnostics::ProcessService.new(@diagnostic).call if @diagnostic.completed?
-        render json: { data: DiagnosticSerializer.render(@diagnostic) }
+        render json: { data: DiagnosticSerializer.render_as_hash(@diagnostic) }
       end
 
       private
@@ -51,7 +56,11 @@ module Api
       end
 
       def diagnostic_params
-        params.require(:diagnostic).permit(:status, :fit_score, :critical_pain, raw_responses: {})
+        params.require(:diagnostic).permit(
+          :status, :fit_score, :critical_pain,
+          raw_responses: {},
+          commercial_inputs: {}
+        )
       end
 
       def validate_status_transition

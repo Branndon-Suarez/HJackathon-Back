@@ -9,23 +9,23 @@ module Api
       def index
         leads = @company.leads.ordered.page(params[:page]).per(params[:per] || 10)
         render json: {
-          data: LeadSerializer.render(leads),
+          data: LeadSerializer.render_as_hash(leads),
           meta: pagination_meta(leads)
         }
       end
 
       def show
-        render json: { data: LeadSerializer.render(@lead) }
+        render json: { data: LeadSerializer.render_as_hash(@lead) }
       end
 
       def create
         lead = @company.leads.create!(lead_params)
-        render json: { data: LeadSerializer.render(lead) }, status: :created
+        render json: { data: LeadSerializer.render_as_hash(lead) }, status: :created
       end
 
       def update
         @lead.update!(lead_params)
-        render json: { data: LeadSerializer.render(@lead) }
+        render json: { data: LeadSerializer.render_as_hash(@lead) }
       end
 
       private

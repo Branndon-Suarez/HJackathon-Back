@@ -38,7 +38,7 @@ RSpec.describe "Api::V1::Diagnostics", type: :request do
             params: { diagnostic: { status: "pending" } },
             headers: headers
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json_body["error"]["code"]).to eq("CONFLICT")
     end
   end

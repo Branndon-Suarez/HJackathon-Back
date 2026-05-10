@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Lead, type: :model do
+  subject { create(:lead) }
+
   describe "associations" do
     it { is_expected.to belong_to(:company) }
     it { is_expected.to have_many(:diagnostics).dependent(:destroy) }

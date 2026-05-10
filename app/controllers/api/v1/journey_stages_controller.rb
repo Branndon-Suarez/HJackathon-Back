@@ -8,17 +8,17 @@ module Api
 
       def index
         stages = @strategy_plan.journey_stages.order(:order)
-        render json: { data: JourneyStageSerializer.render(stages) }
+        render json: { data: JourneyStageSerializer.render_as_hash(stages) }
       end
 
       def create
         stage = @strategy_plan.journey_stages.create!(journey_stage_params)
-        render json: { data: JourneyStageSerializer.render(stage) }, status: :created
+        render json: { data: JourneyStageSerializer.render_as_hash(stage) }, status: :created
       end
 
       def update
         @journey_stage.update!(journey_stage_params)
-        render json: { data: JourneyStageSerializer.render(@journey_stage) }
+        render json: { data: JourneyStageSerializer.render_as_hash(@journey_stage) }
       end
 
       def destroy
