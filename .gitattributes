@@ -7,3 +7,12 @@ db/schema.rb linguist-generated
 vendor/* linguist-vendored
 config/credentials/*.yml.enc diff=rails_credentials
 config/credentials.yml.enc diff=rails_credentials
+
+# Asegurar que los archivos de Windows siempre mantengan su formato
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Tratar los archivos de Ruby con finales de línea estándar
+*.rb text eol=lf
+*.erb text eol=lf
+Gemfile text eol=lf
