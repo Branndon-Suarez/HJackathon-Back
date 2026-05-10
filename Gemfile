@@ -41,6 +41,9 @@ gem "rack-attack"
 # JWT for API authentication
 gem "jwt"
 
+# Explicitly required for compatibility with Ruby 4.0+ (used by rswag)
+gem "ostruct"
+
 # API documentation
 gem "rswag-api"
 gem "rswag-ui"
