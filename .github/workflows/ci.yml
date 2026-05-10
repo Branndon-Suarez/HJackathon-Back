@@ -73,13 +73,15 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test test:system
+          JWT_SECRET: test_secret
+        run: |
+          bundle exec rails db:create db:migrate
+          bundle exec rspec
 
-      - name: Keep screenshots from failed system tests
+      - name: Upload coverage artifacts
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
+          name: coverage
+          path: coverage/
           if-no-files-found: ignore

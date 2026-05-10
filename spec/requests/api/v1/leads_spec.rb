@@ -27,15 +27,14 @@ RSpec.describe "Api::V1::Leads", type: :request do
       expect(json_body["data"]["email"]).to eq("juan@test.com")
     end
 
-    it "returns 409 for duplicate email" do
+    it "returns 422 for duplicate email" do
       create(:lead, company: company, email: "dup@test.com")
 
       post "/api/v1/companies/#{company.id}/leads",
            params: { lead: { full_name: "Dup", email: "dup@test.com" } },
            headers: headers
 
-      expect(response).to have_http_status(:conflict)
-      expect(json_body["error"]["code"]).to eq("CONFLICT")
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 

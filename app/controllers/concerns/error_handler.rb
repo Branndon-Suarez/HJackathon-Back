@@ -2,6 +2,7 @@ module ErrorHandler
   extend ActiveSupport::Concern
 
   included do
+    rescue_from StandardError, with: :internal_error
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
     rescue_from ActiveRecord::RecordInvalid, with: :validation_failed
     rescue_from ActiveRecord::RecordNotUnique, with: :conflict
@@ -11,7 +12,6 @@ module ErrorHandler
     rescue_from ActionController::ParameterMissing, with: :parameter_missing
     rescue_from JsonWebToken::AuthError, with: :unauthorized
     rescue_from ActionController::RoutingError, with: :not_found
-    rescue_from StandardError, with: :internal_error
   end
 
   private
@@ -32,7 +32,7 @@ module ErrorHandler
     render_error(
       code: ErrorCodes::VALIDATION_FAILED,
       message: "Validation failed",
-      status: :unprocessable_entity,
+      status: :unprocessable_content,
       details: details
     )
   end

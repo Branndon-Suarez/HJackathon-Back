@@ -17,19 +17,19 @@ module Api
 
       def show
         plan = @diagnostic.strategy_plan || raise(ActiveRecord::RecordNotFound, "Strategy plan not found")
-        render json: { data: StrategyPlanSerializer.render(plan, view: :extended) }
+        render json: { data: StrategyPlanSerializer.render_as_hash(plan, view: :extended) }
       end
 
       def create
         raise DuplicatePlanError, "This diagnostic already has a strategy plan" if @diagnostic.strategy_plan.present?
 
         plan = @diagnostic.create_strategy_plan!(strategy_plan_params)
-        render json: { data: StrategyPlanSerializer.render(plan) }, status: :created
+        render json: { data: StrategyPlanSerializer.render_as_hash(plan) }, status: :created
       end
 
       def update
         @strategy_plan.update!(strategy_plan_params)
-        render json: { data: StrategyPlanSerializer.render(@strategy_plan) }
+        render json: { data: StrategyPlanSerializer.render_as_hash(@strategy_plan) }
       end
 
       private
