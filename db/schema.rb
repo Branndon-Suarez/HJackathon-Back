@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_01_000005) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_01_000007) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,6 +23,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_000005) do
     t.datetime "updated_at", null: false
   end
 
+  add_check_constraint "companies", "stage = ANY (ARRAY[0, 1, 2, 3])", name: "chk_companies_stage", validate: false
+
   create_table "diagnostics", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_id", null: false
     t.integer "status", default: 0
@@ -34,6 +36,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_000005) do
     t.index ["lead_id"], name: "index_diagnostics_on_lead_id"
   end
 
+  add_check_constraint "diagnostics", "status = ANY (ARRAY[0, 1, 2, 3])", name: "chk_diagnostics_status", validate: false
+
   create_table "journey_stages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "strategy_plan_id", null: false
     t.string "stage_name", null: false
@@ -42,6 +46,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_000005) do
     t.integer "order", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["strategy_plan_id", "order"], name: "idx_journey_stages_on_plan_and_order", unique: true
     t.index ["strategy_plan_id"], name: "index_journey_stages_on_strategy_plan_id"
   end
 
