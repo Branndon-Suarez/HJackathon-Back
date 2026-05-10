@@ -4,12 +4,6 @@ class Lead < ApplicationRecord
 
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: true
-end
 
-##
-# - id:uuid(PK)
-# - company_id:uuid(FK -> companies.id)
-# - full_name:string
-# - email:string(Unique)
-# - role:string(CEO, Sales Director, etc.)
-# - created_at:timestamp
+  scope :ordered, -> { order(created_at: :desc) }
+end
