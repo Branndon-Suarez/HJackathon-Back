@@ -6,7 +6,7 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module HJackathon
+module Ribuzz
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.2
@@ -15,6 +15,18 @@ module HJackathon
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
+
+    config.eager_load_paths += %W[
+      #{config.root}/app/lib
+      #{config.root}/app/services
+      #{config.root}/app/serializers
+    ]
+
+    config.autoload_paths += %W[
+      #{config.root}/app/lib
+      #{config.root}/app/services
+      #{config.root}/app/serializers
+    ]
 
     # Configuration for the application, engines, and railties goes here.
     #

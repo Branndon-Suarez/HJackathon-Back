@@ -1,0 +1,336 @@
+openapi: "3.0.3"
+info:
+  title: "Ribuzz API"
+  version: "1.0.0"
+  description: "API for business diagnostic and strategy planning"
+
+servers:
+  - url: "http://localhost:3000/api/v1"
+    description: "Development"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Company:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        industry: { type: string }
+        stage: { type: string, enum: [seed, early_growth, scaling, mature] }
+        team_size: { type: integer }
+        created_at: { type: string, format: date-time }
+
+    Lead:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        full_name: { type: string }
+        email: { type: string, format: email }
+        role: { type: string }
+        company_id: { type: string, format: uuid }
+        created_at: { type: string, format: date-time }
+
+    Diagnostic:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string, enum: [pending, processing, completed, failed] }
+        raw_responses: { type: object }
+        fit_score: { type: integer }
+        critical_pain: { type: string }
+        lead_id: { type: string, format: uuid }
+        created_at: { type: string, format: date-time }
+
+    StrategyPlan:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        executive_summary: { type: string }
+        audio_briefing_url: { type: string }
+        kpis: { type: array, items: { type: object } }
+        okrs: { type: array, items: { type: object } }
+        diagnostic_id: { type: string, format: uuid }
+        created_at: { type: string, format: date-time }
+
+    JourneyStage:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        stage_name: { type: string }
+        description: { type: string }
+        action_items: { type: array, items: { type: object } }
+        order: { type: integer }
+        strategy_plan_id: { type: string, format: uuid }
+        created_at: { type: string, format: date-time }
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            status: { type: integer }
+            details: { type: array, items: { type: object } }
+
+paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: "Login with email"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+      responses:
+        "200":
+          description: "Token and lead data"
+        "404":
+          description: "Lead not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /companies:
+    get:
+      tags: [Companies]
+      summary: "List companies"
+      security: [BearerAuth: []]
+      responses:
+        "200":
+          description: "Paginated companies list"
+    post:
+      tags: [Companies]
+      summary: "Create company"
+      security: [BearerAuth: []]
+      responses:
+        "201":
+          description: "Company created"
+
+  /companies/{id}:
+    get:
+      tags: [Companies]
+      summary: "Get company"
+      security: [BearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Company data"
+        "404":
+          description: "Not found"
+
+    patch:
+      tags: [Companies]
+      summary: "Update company"
+      security: [BearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Company updated"
+
+  /companies/{company_id}/leads:
+    get:
+      tags: [Leads]
+      summary: "List leads for company"
+      security: [BearerAuth: []]
+      parameters:
+        - name: company_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Paginated leads"
+    post:
+      tags: [Leads]
+      summary: "Create lead"
+      security: [BearerAuth: []]
+      responses:
+        "201":
+          description: "Lead created"
+        "409":
+          description: "Duplicate email"
+
+  /leads/{id}:
+    get:
+      tags: [Leads]
+      summary: "Get lead"
+      security: [BearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Lead data"
+    patch:
+      tags: [Leads]
+      summary: "Update lead"
+      security: [BearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Lead updated"
+        "409":
+          description: "Duplicate email"
+
+  /leads/{lead_id}/diagnostics:
+    get:
+      tags: [Diagnostics]
+      summary: "List diagnostics"
+      security: [BearerAuth: []]
+      parameters:
+        - name: lead_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Paginated diagnostics"
+    post:
+      tags: [Diagnostics]
+      summary: "Create diagnostic"
+      security: [BearerAuth: []]
+      responses:
+        "201":
+          description: "Diagnostic created"
+
+  /diagnostics/{id}:
+    get:
+      tags: [Diagnostics]
+      summary: "Get diagnostic"
+      security: [BearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Diagnostic data"
+    patch:
+      tags: [Diagnostics]
+      summary: "Update diagnostic"
+      security: [BearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Diagnostic updated"
+        "422":
+          description: "Invalid status transition"
+
+  /diagnostics/{diagnostic_id}/strategy_plan:
+    get:
+      tags: [Strategy Plans]
+      summary: "Get strategy plan"
+      security: [BearerAuth: []]
+      parameters:
+        - name: diagnostic_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Strategy plan"
+        "404":
+          description: "Not found"
+    post:
+      tags: [Strategy Plans]
+      summary: "Create strategy plan"
+      security: [BearerAuth: []]
+      responses:
+        "201":
+          description: "Strategy plan created"
+        "409":
+          description: "Already exists"
+
+  /strategy_plans/{id}:
+    patch:
+      tags: [Strategy Plans]
+      summary: "Update strategy plan"
+      security: [BearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Strategy plan updated"
+
+  /strategy_plans/{strategy_plan_id}/journey_stages:
+    get:
+      tags: [Journey Stages]
+      summary: "List journey stages"
+      security: [BearerAuth: []]
+      parameters:
+        - name: strategy_plan_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Ordered stages"
+    post:
+      tags: [Journey Stages]
+      summary: "Create journey stage"
+      security: [BearerAuth: []]
+      responses:
+        "201":
+          description: "Stage created"
+
+  /journey_stages/{id}:
+    patch:
+      tags: [Journey Stages]
+      summary: "Update journey stage"
+      security: [BearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: "Stage updated"
+    delete:
+      tags: [Journey Stages]
+      summary: "Delete journey stage"
+      security: [BearerAuth: []]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "204":
+          description: "Stage deleted"
+        "409":
+          description: "Cannot delete"
