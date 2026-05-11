@@ -70,3 +70,8 @@ group :development, :test do
 end
 
 gem "psych", "= 5.3.1"
+
+gem "rackup"
+gem "base64"
+gem "bigdecimal"
+gem "mutex_m"
