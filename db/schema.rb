@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_01_000007) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_11_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,6 +25,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_000007) do
 
   add_check_constraint "companies", "stage = ANY (ARRAY[0, 1, 2, 3])", name: "chk_companies_stage", validate: false
 
+  create_table "conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lead_id", null: false
+    t.integer "status", default: 0, null: false
+    t.jsonb "metadata", default: {}
+    t.integer "message_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_conversations_on_created_at"
+    t.index ["lead_id"], name: "index_conversations_on_lead_id"
+    t.index ["status"], name: "index_conversations_on_status"
+  end
+
   create_table "diagnostics", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_id", null: false
     t.integer "status", default: 0
@@ -35,6 +45,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_000007) do
     t.string "critical_pain"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "commercial_inputs", default: {}
+    t.jsonb "commercial_outputs", default: {}
+    t.index ["commercial_inputs"], name: "index_diagnostics_on_commercial_inputs", using: :gin
+    t.index ["commercial_outputs"], name: "index_diagnostics_on_commercial_outputs", using: :gin
     t.index ["lead_id"], name: "index_diagnostics_on_lead_id"
   end
 
@@ -63,6 +77,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_000007) do
     t.index ["email"], name: "index_leads_on_email", unique: true
   end
 
+  create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "conversation_id", null: false
+    t.string "role", null: false
+    t.text "content", null: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["role"], name: "index_messages_on_role"
+  end
+
   create_table "strategy_plans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "diagnostic_id", null: false
     t.text "executive_summary"
@@ -74,9 +100,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_000007) do
     t.index ["diagnostic_id"], name: "index_strategy_plans_on_diagnostic_id"
   end
 
+  add_foreign_key "conversations", "leads"
   add_foreign_key "diagnostics", "leads"
   add_foreign_key "journey_stages", "strategy_plans"
   add_foreign_key "leads", "companies"
+  add_foreign_key "messages", "conversations"
   add_foreign_key "strategy_plans", "diagnostics"
 end
->>>>>>> 119629dd62ca2c31cb141c10159acb81b97f5588

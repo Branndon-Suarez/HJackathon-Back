@@ -7,6 +7,11 @@ class Rack::Attack
     req.ip if req.path.start_with?("/api/v1/") && req.post?
   end
 
+  # Rate limit para webhooks de n8n
+  throttle("webhooks/ip", limit: 30, period: 1.minute) do |req|
+    req.ip if req.path.start_with?("/webhooks/")
+  end
+
   self.throttled_responder = lambda do |_env|
     [
       429,
