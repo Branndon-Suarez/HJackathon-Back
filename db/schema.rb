@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema[7.2].define(version: 2025_05_12_000002) do
-=======
-ActiveRecord::Schema[7.2].define(version: 2025_05_01_000008) do
->>>>>>> be2b5db63be27bf5683ca8b5a7fb167b3716a30d
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,10 +47,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_01_000008) do
     t.datetime "updated_at", null: false
     t.jsonb "commercial_inputs", default: {}
     t.jsonb "commercial_outputs", default: {}
-<<<<<<< HEAD
     t.string "session_id"
-=======
->>>>>>> be2b5db63be27bf5683ca8b5a7fb167b3716a30d
     t.index ["commercial_inputs"], name: "index_diagnostics_on_commercial_inputs", using: :gin
     t.index ["commercial_outputs"], name: "index_diagnostics_on_commercial_outputs", using: :gin
     t.index ["lead_id"], name: "index_diagnostics_on_lead_id"
