@@ -34,7 +34,6 @@
 
 # Environment variables
 .env.local
-.env.production
 
 # IDE Settings (RubyMine)
 /.idea/
