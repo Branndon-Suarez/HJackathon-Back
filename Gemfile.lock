@@ -150,7 +150,6 @@ GEM
       net-pop
       net-smtp
     marcel (1.1.0)
-    matrix (0.4.3)
     mini_mime (1.1.5)
     minitest (5.27.0)
     msgpack (1.8.0)
@@ -169,7 +168,6 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.3-x86_64-linux-gnu)
       racc (~> 1.4)
-    ostruct (0.6.3)
     parallel (2.1.0)
     parser (3.3.11.1)
       ast (~> 2.4.1)
@@ -335,12 +333,9 @@ DEPENDENCIES
   faker
   jwt
   kaminari
-  matrix (~> 0.4.3)
   mutex_m
-  ostruct
   pg (~> 1.1)
   prawn
-  psych (= 5.3.1)
   puma (>= 5.0)
   rack-attack
   rack-cors
@@ -352,6 +347,9 @@ DEPENDENCIES
   rubocop-rails-omakase
   shoulda-matchers
   tzinfo-data
+
+RUBY VERSION
+   ruby 4.0.3p0
 
 BUNDLED WITH
    2.5.22

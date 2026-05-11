@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-
+ruby "3.3.1"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.2.3"
 # Use postgresql as the database for Active Record
@@ -44,9 +44,6 @@ gem "jwt"
 # PDF generation
 gem "prawn"
 
-# Explicitly required for compatibility (rswag-ui needs it)
-gem "ostruct"
-
 # API documentation
 gem "rswag-api"
 gem "rswag-ui"
@@ -72,10 +69,7 @@ group :development, :test do
   gem "database_cleaner-active_record"
 end
 
-gem "psych", "= 5.3.1"
-
 gem "rackup"
 gem "base64"
 gem "bigdecimal"
 gem "mutex_m"
-gem "matrix", "~> 0.4.3"
