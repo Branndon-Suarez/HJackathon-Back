@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
+ActiveRecord::Schema[7.2].define(version: 2025_05_13_000002) do
+=======
 ActiveRecord::Schema[7.2].define(version: 2025_05_12_000002) do
+>>>>>>> eb4c18d47639ebf72ac5b9ec93f537942d9d76f7
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -75,6 +79,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_000002) do
     t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "password_digest"
     t.index ["company_id"], name: "index_leads_on_company_id"
     t.index ["email"], name: "index_leads_on_email", unique: true
   end
@@ -89,6 +94,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_000002) do
     t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["role"], name: "index_messages_on_role"
+  end
+
+  create_table "reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "diagnostic_id", null: false
+    t.string "report_type", null: false
+    t.string "overall_score"
+    t.text "recommendation"
+    t.boolean "processed", default: false, null: false
+    t.text "error_message"
+    t.jsonb "raw_data", default: {}
+    t.jsonb "scoring", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_reports_on_created_at"
+    t.index ["diagnostic_id"], name: "index_reports_on_diagnostic_id"
+    t.index ["processed"], name: "index_reports_on_processed"
+    t.index ["report_type"], name: "index_reports_on_report_type"
   end
 
   create_table "strategy_plans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -107,5 +129,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_12_000002) do
   add_foreign_key "journey_stages", "strategy_plans"
   add_foreign_key "leads", "companies"
   add_foreign_key "messages", "conversations"
+  add_foreign_key "reports", "diagnostics"
   add_foreign_key "strategy_plans", "diagnostics"
 end

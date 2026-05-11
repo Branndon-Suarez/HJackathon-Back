@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       # Reports from n8n analysis
       resources :reports, only: %i[index show] do
         get :latest, on: :collection
+        get :download_pdf, on: :member
       end
 
       # Companies -> Leads (shallow)

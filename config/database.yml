@@ -21,9 +21,12 @@ default: &default
   host: <%= ENV.fetch("DB_HOST") { '127.0.0.1' } %>
   port: <%= ENV.fetch("DB_PORT") { 5432 } %>
 
-
 development:
   <<: *default
+<<<<<<< HEAD
+  database: <%= ENV.fetch("DB_NAME_DEV") { 'Ribuzz_development' } %>
+
+=======
   database: Ribuzz_development
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -55,6 +58,7 @@ development:
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
+>>>>>>> eb4c18d47639ebf72ac5b9ec93f537942d9d76f7
 test:
   <<: *default
   database: <%= ENV.fetch("DB_NAME_TEST") { 'ribuzz_test' } %>
@@ -81,6 +85,4 @@ test:
 #
 production:
   <<: *default
-  # En producción, Supabase suele dar una URL completa llamada DATABASE_URL
-  # Si no, usamos las variables individuales
   url: <%= ENV["DATABASE_URL"] %>
