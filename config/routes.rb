@@ -8,6 +8,14 @@ Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
 
+  # ---------------------------------------------------------
+  # WEBHOOKS (Servicios externos como n8n)
+  # ---------------------------------------------------------
+  post "webhooks/n8n", to: "webhooks#n8n"
+
+  # ---------------------------------------------------------
+  # API PRINCIPAL
+  # ---------------------------------------------------------
   namespace :api do
     namespace :v1 do
       get "ping", to: "ping#show"
