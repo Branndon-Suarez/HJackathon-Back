@@ -1,21 +1,21 @@
-Blueprinter::Serializer.for(Chatbot::Conversation) do
-  field :id, name: :id
-  field :status
-  field :message_count
-  field :created_at
-  field :updated_at
+require 'blueprinter'
 
-  association :messages,
-    blueprint: Chatbot::MessageSerializer,
-    name: :messages,
-    if: ->(_, _opts) { true }
+module Chatbot
+  class ConversationSerializer < Blueprinter::Base
+    identifier :id
 
-  view :extended do
-    association :lead,
-      blueprint: Api::V1::LeadSerializer,
-      name: :lead,
-      if: ->(_, _opts) { true }
+    field :status
+    field :message_count
+    field :created_at
+    field :updated_at
 
-    field :metadata
+    association :messages,
+                blueprint: Chatbot::MessageSerializer
+
+    view :extended do
+      association :lead,
+                  blueprint: Api::V1::LeadSerializer
+      field :metadata
+    end
   end
 end
