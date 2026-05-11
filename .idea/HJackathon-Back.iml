@@ -63,6 +63,7 @@
     <orderEntry type="library" scope="PROVIDED" name="loofah (v2.25.1, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mail (v2.9.0, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="marcel (v1.1.0, ruby-4.0.3-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="matrix (v0.4.3, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mini_mime (v1.1.5, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="minitest (v5.27.0, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="msgpack (v1.8.0, ruby-4.0.3-p0) [gem]" level="application" />
