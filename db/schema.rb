@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_11_000002) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_12_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,7 +27,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_11_000002) do
 
   create_table "conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "lead_id", null: false
-    t.integer "status", default: 0, null: false
+    t.string "status", default: "active", null: false
     t.jsonb "metadata", default: {}
     t.integer "message_count", default: 0
     t.datetime "created_at", null: false
@@ -47,9 +47,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_11_000002) do
     t.datetime "updated_at", null: false
     t.jsonb "commercial_inputs", default: {}
     t.jsonb "commercial_outputs", default: {}
+    t.string "session_id"
     t.index ["commercial_inputs"], name: "index_diagnostics_on_commercial_inputs", using: :gin
     t.index ["commercial_outputs"], name: "index_diagnostics_on_commercial_outputs", using: :gin
     t.index ["lead_id"], name: "index_diagnostics_on_lead_id"
+    t.index ["session_id"], name: "index_diagnostics_on_session_id", unique: true, where: "(session_id IS NOT NULL)"
   end
 
   add_check_constraint "diagnostics", "status = ANY (ARRAY[0, 1, 2, 3])", name: "chk_diagnostics_status", validate: false
