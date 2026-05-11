@@ -1,17 +1,23 @@
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Health check
+  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
+  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Swagger docs
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
 
-  # ── WEBHOOKS (no auth required, signature-verified) ──────────
+  # ---------------------------------------------------------
+  # WEBHOOKS (Servicios externos como n8n)
+  # ---------------------------------------------------------
   get  "webhooks/n8n", to: "webhooks/n8n#verify"
-  post "webhooks/n8n", to: "webhooks/n8n#receive"
+  post "webhooks/n8n", to: "webhooks#n8n"
 
+  # ---------------------------------------------------------
+  # API PRINCIPAL
+  # ---------------------------------------------------------
   namespace :api do
     namespace :v1 do
       # Auth & health
@@ -48,7 +54,9 @@ Rails.application.routes.draw do
 
       resources :journey_stages, only: %i[update destroy]
 
-      # ── CHATBOT ─────────────────────────────────────────
+      # ---------------------------------------------------------
+      # CHATBOT
+      # ---------------------------------------------------------
       namespace :chatbot do
         resources :conversations, only: %i[index show create update destroy] do
           resources :messages, only: %i[index create]
