@@ -1,7 +1,7 @@
 module Api
   module V1
     class ReportsController < ApplicationController
-      before_action :set_report, only: %i[show]
+      before_action :set_report, only: %i[show download_pdf]
 
       # GET /api/v1/reports
       # Lista los informes del lead actual (o todos si es admin).
@@ -22,6 +22,15 @@ module Api
         render json: {
           data: ReportSerializer.render_as_hash(@report, view: :extended)
         }
+      end
+
+      # GET /api/v1/reports/:id/download_pdf
+      def download_pdf
+        authorize_report!(@report)
+        pdf = PdfReportService.new(@report).generate
+        send_data pdf, filename: "audit_report_#{@report.id}.pdf",
+                       type: "application/pdf",
+                       disposition: "attachment"
       end
 
       # GET /api/v1/reports/latest

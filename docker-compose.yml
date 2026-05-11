@@ -25,6 +25,7 @@ services:
       JWT_SECRET: hackathon_dev_secret
       CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
       WEBHOOK_SECRET: hackathon_webhook_secret_cambiar
+      N8N_WEBHOOK_URL: https://n8n.srv1097452.hstgr.cloud/webhook/ribuzz-diagnostico
     depends_on:
       db:
         condition: service_healthy

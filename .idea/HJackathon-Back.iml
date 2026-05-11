@@ -25,6 +25,7 @@
     <orderEntry type="library" scope="PROVIDED" name="activesupport (v7.2.3.1, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ast (v2.4.3, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="base64 (v0.3.0, ruby-4.0.3-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bcrypt (v3.1.22, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="benchmark (v0.5.0, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bigdecimal (v4.1.2, ruby-4.0.3-p0) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="blueprinter (v1.3.0, ruby-4.0.3-p0) [gem]" level="application" />

@@ -5,6 +5,17 @@ module Api
 
       def login
         lead = Lead.find_by!(email: params[:email])
+
+        unless lead.authenticate(params[:password])
+          render json: {
+            error: {
+              code: ErrorCodes::UNAUTHORIZED,
+              message: "Invalid email or password",
+              status: 401
+            }
+          }, status: :unauthorized and return
+        end
+
         token = JsonWebToken.encode(
           lead_id: lead.id,
           company_id: lead.company_id

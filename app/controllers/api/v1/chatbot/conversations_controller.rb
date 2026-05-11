@@ -1,5 +1,5 @@
 class Api::V1::Chatbot::ConversationsController < ApplicationController
-  before_action :set_conversation, only: %i[show update destroy add_message get_messages]
+  before_action :set_conversation, only: %i[show update destroy]
 
   # GET /api/v1/chatbot/conversations
   def index
@@ -40,21 +40,6 @@ class Api::V1::Chatbot::ConversationsController < ApplicationController
     head :no_content
   end
 
-  # POST /api/v1/chatbot/conversations/:id/add_message
-  def add_message
-    message = @conversation.messages.build!(message_params.merge(role: "user"))
-    message.save!
-    ProcessMessageJob.perform_later(message.id)
-    render json: { data: Chatbot::MessageSerializer.render_as_hash(message, view: :extended) },
-           status: :created
-  end
-
-  # GET /api/v1/chatbot/conversations/:id/get_messages
-  def get_messages
-    messages = @conversation.messages.ordered
-    render json: { data: messages.map { |m| Chatbot::MessageSerializer.render_as_hash(m) } }
-  end
-
   private
 
   def set_conversation
@@ -63,10 +48,6 @@ class Api::V1::Chatbot::ConversationsController < ApplicationController
 
   def conversation_params
     params.require(:conversation).permit(:status, metadata: {})
-  end
-
-  def message_params
-    params.require(:message).permit(:content, metadata: {})
   end
 
   def current_lead
